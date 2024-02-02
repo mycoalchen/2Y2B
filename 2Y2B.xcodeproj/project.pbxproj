@@ -11,6 +11,7 @@
 		B4F2259A2B6D9F8800A12D0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F225992B6D9F8800A12D0D /* ContentView.swift */; };
 		B4F2259C2B6D9F8A00A12D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4F2259B2B6D9F8A00A12D0D /* Assets.xcassets */; };
 		B4F2259F2B6D9F8A00A12D0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4F2259E2B6D9F8A00A12D0D /* Preview Assets.xcassets */; };
+		B4F225A62B6D9FFB00A12D0D /* EBGaramond-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4F225A52B6D9FFA00A12D0D /* EBGaramond-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,8 @@
 		B4F225992B6D9F8800A12D0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B4F2259B2B6D9F8A00A12D0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B4F2259E2B6D9F8A00A12D0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B4F225A52B6D9FFA00A12D0D /* EBGaramond-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "EBGaramond-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		B4F225A72B6DA0A900A12D0D /* -Y2B-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-Y2B-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +54,8 @@
 		B4F225962B6D9F8800A12D0D /* 2Y2B */ = {
 			isa = PBXGroup;
 			children = (
+				B4F225A72B6DA0A900A12D0D /* -Y2B-Info.plist */,
+				B4F225A52B6D9FFA00A12D0D /* EBGaramond-VariableFont_wght.ttf */,
 				B4F225972B6D9F8800A12D0D /* _Y2BApp.swift */,
 				B4F225992B6D9F8800A12D0D /* ContentView.swift */,
 				B4F2259B2B6D9F8A00A12D0D /* Assets.xcassets */,
@@ -127,6 +132,7 @@
 			files = (
 				B4F2259F2B6D9F8A00A12D0D /* Preview Assets.xcassets in Resources */,
 				B4F2259C2B6D9F8A00A12D0D /* Assets.xcassets in Resources */,
+				B4F225A62B6D9FFB00A12D0D /* EBGaramond-VariableFont_wght.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +281,7 @@
 				DEVELOPMENT_TEAM = RK8JWZ43AP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-Y2B-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,6 +311,7 @@
 				DEVELOPMENT_TEAM = RK8JWZ43AP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-Y2B-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
