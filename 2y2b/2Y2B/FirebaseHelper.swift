@@ -52,6 +52,12 @@ class FirebaseHelper {
             }
         }
     }
+    public func playPlayer() {
+        self.audioPlayer.play()
+    }
+    public func pausePlayer() {
+        self.audioPlayer.pause()
+    }
 }
 
 /*
