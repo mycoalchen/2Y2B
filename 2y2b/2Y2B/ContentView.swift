@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var signedIn = false
     @State private var audioLoaded = false
     @State private var audioPlaying = true
+    @State private var currentTime: TimeInterval = 0
+    @State private var duration: TimeInterval = 1
     @FocusState private var nameFocused: Bool
     
     private var firebaseHelper: FirebaseHelper = FirebaseHelper()
@@ -56,6 +58,17 @@ struct ContentView: View {
             }
             .frame(minWidth: 20)
             if audioLoaded {
+                Slider(value: $currentTime, in: 0...duration, onEditingChanged: { editing in
+                    if !editing {
+                        firebaseHelper.seek(to: currentTime)
+                    }
+                })
+                .onAppear {
+                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                        self.currentTime = firebaseHelper.currentTime
+                        self.duration = firebaseHelper.duration
+                    }
+                }
                 HStack(spacing: 0) {
                     Button(action: {
                         if audioPlaying {

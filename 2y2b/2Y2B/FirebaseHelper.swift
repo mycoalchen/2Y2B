@@ -58,6 +58,15 @@ class FirebaseHelper {
     public func pausePlayer() {
         self.audioPlayer.pause()
     }
+    var currentTime: TimeInterval {
+        return audioPlayer.currentTime
+    }
+    var duration: TimeInterval {
+        return audioPlayer.duration
+    }
+    func seek(to time: TimeInterval) {
+        audioPlayer.currentTime = time
+    }
 }
 
 /*
