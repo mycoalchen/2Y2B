@@ -3,29 +3,20 @@ import React, { useState } from 'react';
 
 const App = () => {
   const [name, setName] = useState('[Your Name]');
-  const [selectedSources, setSelectedSources] = useState([]);
-  const [topics, setTopics] = useState('[Topic 1, Topic 2, Topic 3]');
-  const [suggestedSources] = useState(['CNN', 'BBC', 'Reuters', 'The New York Times']);
+  const [sources, setSources] = useState('[Source 1, Source 2]');
+  const [topics, setTopics] = useState('[Topic 1, Topic 2]');
   const [topicList, setTopicList] = useState([]);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
-    /*const inputValue = e.target.value;
-  if (inputValue.startsWith('[') && inputValue.endsWith(']')) {
-    setName(inputValue);
-  } else {
-    setName(`[${inputValue}]`);
-  }*/
-  }
-  
+  };
+
   const handleSourcesChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-    setSelectedSources(selectedOptions);
+    setSources(e.target.value);
   };
 
   const handleTopicsChange = (e) => {
-    const inputValue = e.target.value;
-    setTopics(inputValue);
+    setTopics(e.target.value);
   };
 
   const handleTopicAdd = () => {
@@ -44,43 +35,34 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('User preferences:', { name, selectedSources, topics: topicList });
+    console.log('User preferences:', { name, sources, topics: topicList });
     // In a real app, you might want to handle the data or navigate to another page
   };
 
   return (
     <div className="app-container" style={{ backgroundColor: '#1E0B04', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'EB Garamond, serif' }}>
-      <h1 style={{ color: '#fff', marginBottom: '6px', fontSize: '48px' }}>2Y2B</h1>
-      <h2 style={{ color: '#fff', marginTop: '0', marginBottom: '20px' , fontSize: '24px'}}>Your Yesterday Blended Briefly</h2>
+      <h1 style={{ color: '#fff', margin: '0', fontSize: '48px' }}>2Y2B</h1>
+      <p style={{ color: '#fff', margin: '10px 0 20px', fontSize: '24px' }}>Your Yesterday Blended Briefly</p>
       <form onSubmit={handleSubmit} style={{ textAlign: 'center', color: '#fff' }}>
         <label>
           Name:
-          <input type="text" value={name} onChange={handleNameChange} style={{ margin: '10px', border: 'none', backgroundColor: '#1E0B04' }} />
+          <input type="text" value={name} onChange={handleNameChange} style={{ margin: '10px', padding: '8px', border: 'none', backgroundColor: '#1E0B04', width: '90px', fontSize: '16px' }} />
         </label>
         <br />
         <label>
-          News Sources (Select multiple):
-          <select multiple value={selectedSources} onChange={handleSourcesChange} style={{ margin: '10px' }}>
-            {suggestedSources.map((source) => (
-              <option key={source} value={source}>
-                {source}
-              </option>
-            ))}
-          </select>
+          News Sources:
+          <input type="text" value={sources} onChange={handleSourcesChange} style={{ margin: '10px', padding: '8px', border: 'none', backgroundColor: '#1E0B04', width: '145px', fontSize: '16px' }} />
         </label>
         <br />
         <label>
           Topics:
-          <input type="text" value={topics} onChange={handleTopicsChange} style={{ margin: '10px', border: 'none', backgroundColor: '#1E0B04' }} />
-          <button type="button" onClick={handleTopicAdd}>
-            Add Topic
-          </button>
+          <input type="text" value={topics} onChange={handleTopicsChange} style={{ margin: '10px', padding: '8px', border: 'none', backgroundColor: '#1E0B04', width: '120px', fontSize: '16px' }} />
         </label>
         <ul>
           {topicList.map((topic, index) => (
             <li key={index}>
               {topic}
-              <button type="button" onClick={() => handleTopicRemove(index)}>
+              <button type="button" onClick={() => handleTopicRemove(index)} style = {{margin: '100px 0 20px'}}>
                 Remove
               </button>
             </li>
