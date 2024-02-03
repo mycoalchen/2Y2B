@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route('/test')
 def test_func():
-    return {'response': 'bottom g'}
+    name = request.args.get('name')
+    return {'response': name + ' is bottom g'}

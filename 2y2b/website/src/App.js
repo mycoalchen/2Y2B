@@ -36,7 +36,10 @@ const App = () => {
     e.preventDefault();
 
     console.log('User preferences:', { name, sources, topics: topicList });
-    // In a real app, you might want to handle the data or navigate to another page
+
+    fetch(`/test?name=${name}`).then(res => res.json()).then(data => {
+      console.log(data)
+    })
   };
 
   return (
