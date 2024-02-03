@@ -1,29 +1,66 @@
 from flask import Flask, request
 import openai
+from openai import OpenAI
+import time
 import os
 import json
 from unicodedata import name
 from urllib import response
 from google.cloud import texttospeech_v1
-from firebase_admin import credentials, initialize_app, storage
+from firebase_admin import credentials, initialize_app, storage, firestore
 from newsapi import NewsApiClient
 from newspaper import Article
 import requests
 from bs4 import BeautifulSoup
-import pprint
+from dotenv import load_dotenv 
 import pandas as pd
 import numpy as np
 from google.oauth2 import service_account
 
+load_dotenv()
 app = Flask(__name__)
-cred = credentials.Certificate("ferrous-arena-413203-2104c5c4c118.json")
+cred = credentials.Certificate("y2b firebase-adminsdk.json")
 initialize_app(cred, {'storageBucket': 'y2b-fd594.appspot.com'})
 
-@app.route('/test')
-def test_func():
-    name = request.args.get('name')
-    return {'response': name + ' is bottom g'}
+db = firestore.client()
+users_ref = db.collection('users')
 
+# Called when "Submit" clicked
+@app.route('/submit')
+def test_func():
+    # Write name, sources, and topics to an entry in Firestore
+    name = request.args.get('name')
+    sources = request.args.get('sources').split(", ")
+    topics = request.args.get('topics').split(", ")
+    doc_ref = db.collection("users").document(name)
+    doc_ref.set({"sources": sources, "topics": topics})
+    
+    # Calculate number of words per topic - targeting a total of 360 words
+    wordsPerTopic = 360 / len(topics)
+
+    # iterate through each topic
+    topic_outputs = []
+    for (topicNum, topic) in topics:
+      # to avoid rate limiting
+      if topicNum > 0 and topicNum % 3 == 0:
+        time.sleep(60)
+      articles = getText(topic, sources)
+      gptOutput = completePrompt(f'Summarize these articles in a news-in-brief in a text-to-speech friendly format in {wordsPerTopic} words' + articles, 'api.openai.com', 240, 1, 1, 0, 0)
+      topic_outputs.append(gptOutput)
+
+    topic_outputs_str = '['.join((str(output) + ";;; ") for output in topic_outputs).join(']')
+
+    final_output = completePrompt('Combine these news-in-briefs (separated by ";;; ") in a text-to-speech friendly format in 360 words with appropriate transititions' + topic_outputs_str, 'api.openai.com', 720, 1, 1, 0, 0)
+
+    texttomp3(name, '<speak>' + f"Good morning ${name}! This is your yesterday, blended briefly." + final_output + '</speak>')
+    uploadtoFB(name)
+    os.remove(name + 'mp3')
+
+    return doc_ref.get().to_dict()
+
+# Sample good topics/sources: cryptocurrency, [wired.com, businessinsider.com]
+
+# Get news articles on a given topic from given sources
 def getText(keyword, sources):
   parameters = {
     'q': keyword,
@@ -39,7 +76,6 @@ def getText(keyword, sources):
   urls = []
   for i in range(len(all_articles['articles'])):
     url = all_articles['articles'][i]['url']
-    #print(url)
     urls.append(url)
 
   if sources != []:
@@ -62,32 +98,29 @@ def getText(keyword, sources):
 
   return texts
 
+# Get GPT output from a prompt and some model parameters
 def completePrompt(prompt, apiUri, max_tokens, temperature, top_p, presence_penalty, frequency_penalty):
+    client = OpenAI(api_key=os.getenv('OPENAI_KEY'), base_url=f'https://{apiUri}/v1')
     # openai.api_base = "http://10.0.0.103:1234/v1"
-    apiUri = apiUri
-    openai.api_base = f'https://{apiUri}/v1'
-    openai.api_key = "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"
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        # model="gpt-4",
-        # model="gpt-4-32k-0613",
-        messages=[
-            {"role": "user",
-             "content": prompt}
-            ],
-        max_tokens=max_tokens,
-        # max_new_tokens=max_tokens,
-        temperature=temperature,
-        top_p=top_p,
-        presence_penalty=presence_penalty,
-        frequency_penalty=frequency_penalty
-        )
+    completion = client.chat.completions.create(model="gpt-3.5-turbo-16k",
+    # model="gpt-4",
+    # model="gpt-4-32k-0613",
+    messages=[
+        {"role": "user",
+         "content": prompt}
+        ],
+    max_tokens=max_tokens,
+    temperature=temperature,
+    top_p=top_p,
+    presence_penalty=presence_penalty,
+    frequency_penalty=frequency_penalty)
 
     # print(f'reached here with this response: {response}')
     return completion.choices[0].message.content
 
+# Get mp3 of speech for given text, write it to local file name.mp3
 def texttomp3(name, text):
-  credentials = service_account.Credentials.from_service_account_file('ferrous-arena-413203-2104c5c4c118.json')
+  credentials = service_account.Credentials.from_service_account_file('y2b firebase-adminsdk.json')
   client = texttospeech_v1.TextToSpeechClient(credentials=credentials)
   synthesis_input = texttospeech_v1.SynthesisInput(ssml=text)
   voice1 = texttospeech_v1.VoiceSelectionParams (
@@ -107,6 +140,7 @@ def texttomp3(name, text):
     output.write(response1.audio_content)
   return
 
+# Upload name.mp3 to Firebase storage
 def uploadtoFB(name):
   fileName = name + ".mp3"
   bucket = storage.bucket()
@@ -114,9 +148,3 @@ def uploadtoFB(name):
   blob.upload_from_filename(fileName)
   blob.make_public()
   return
-
-articles = getText('cryptocurrency',['wired.com','businessinsider.com'])
-gptOutput = completePrompt('Summarize these articles in a news-in-brief in a text-to-speech friendly format in 200 words' +articles, 'api.openai.com', 400, 1, 1, 0, 0)
-texttomp3('john', '<speak>'+gptOutput+'</speak>')
-uploadtoFB('john')
-os.remove('john.mp3')

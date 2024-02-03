@@ -37,7 +37,7 @@ const App = () => {
 
     console.log('User preferences:', { name, sources, topics: topicList });
 
-    fetch(`/test?name=${name}`).then(res => res.json()).then(data => {
+    fetch(`/submit?name=${name}&sources=${sources}&topics=${topics}`).then(res => res.json()).then(data => {
       console.log(data)
     })
   };

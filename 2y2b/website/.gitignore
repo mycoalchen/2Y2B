@@ -24,3 +24,7 @@ yarn-error.log*
 
 venv
 __pycache__
+
+.env
+
+ferrous-arena-413203-2104c5c4c118.json
