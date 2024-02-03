@@ -41,8 +41,10 @@ def test_func():
     # iterate through each topic
     topic_outputs = []
     for topic in topics:
+      print(topic)
       articles = getText(topic, sources)
       gptOutput = completePrompt(f'Summarize these articles in a news-in-brief in a text-to-speech friendly format in {wordsPerTopic} words' + articles, 'api.openai.com', 240, 1, 1, 0, 0)
+      print(gptOutput)
       topic_outputs.append(gptOutput)
 
     topic_outputs_str = '['.join((str(output) + ";;; ") for output in topic_outputs).join(']')
