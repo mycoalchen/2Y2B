@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var nameWidth: CGFloat = 0
     @State private var signedIn = false
     @State private var audioLoaded = false
-    @State private var audioPlaying = true
+    @State private var audioPlaying = false
     @State private var currentTime: TimeInterval = 0
     @State private var duration: TimeInterval = 1
     @FocusState private var nameFocused: Bool
@@ -31,7 +31,7 @@ struct ContentView: View {
             HStack(spacing: 0) {
                 if signedIn {
                     Text("your blend.")
-                        .foregroundStyle(offWhite2)
+                        .foregroundStyle(offWhite1)
                         .font(.custom("EBGaramond-Regular", size: 18))
                 } else {
                     Text("[")
@@ -63,12 +63,15 @@ struct ContentView: View {
                         firebaseHelper.seek(to: currentTime)
                     }
                 })
+                .padding(.horizontal, 80)
+                .accentColor(offWhite1)
                 .onAppear {
-                    Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                    Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { _ in
                         self.currentTime = firebaseHelper.currentTime
                         self.duration = firebaseHelper.duration
                     }
                 }
+                .padding(.top, 10)
                 HStack(spacing: 0) {
                     Button(action: {
                         if audioPlaying {
@@ -89,7 +92,7 @@ struct ContentView: View {
                     .frame(width: 30, height: 30)
                     .background(Color.clear)
                 }
-                .padding(.vertical, 15)
+                .padding(.vertical, 10)
             }
         }
         .padding(0.0)
@@ -101,6 +104,7 @@ struct ContentView: View {
         firebaseHelper.playAudioFromName(filename: "Tunak Tunak tun.mp3")
         signedIn = true
         audioLoaded = true
+        audioPlaying = true
     }
 }
 
