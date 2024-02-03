@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct _Y2BApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                ContentView()
+            }
         }
     }
 }

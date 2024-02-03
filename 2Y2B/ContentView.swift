@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var name: String = ""
     @State private var nameWidth: CGFloat = 0
     @FocusState private var nameFocused: Bool
+    private var firebaseHelper: FirebaseHelper = FirebaseHelper()
     
     var body: some View {
         VStack(spacing: 0.0) {
@@ -35,9 +36,9 @@ struct ContentView: View {
                     .fixedSize()
                     .frame(idealWidth: 0)
                     .focused($nameFocused)
-                    .onChange(of: nameFocused) {
-                        print(nameFocused)
-                        print(name)
+                    .onSubmit {
+                        print("Name submitted: " + name)
+                        checkName()
                     }
                 Text("]")
                     .foregroundColor(offWhite2)
@@ -49,6 +50,10 @@ struct ContentView: View {
         .padding(0.0)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(backgroundColor)
+    }
+    
+    func checkName() {
+        firebaseHelper.playAudioFromName(filename: "Tunak Tunak tun.mp3")
     }
 }
 
