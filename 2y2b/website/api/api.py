@@ -40,10 +40,7 @@ def test_func():
 
     # iterate through each topic
     topic_outputs = []
-    for (topicNum, topic) in topics:
-      # to avoid rate limiting
-      if topicNum > 0 and topicNum % 3 == 0:
-        time.sleep(60)
+    for topic in topics:
       articles = getText(topic, sources)
       gptOutput = completePrompt(f'Summarize these articles in a news-in-brief in a text-to-speech friendly format in {wordsPerTopic} words' + articles, 'api.openai.com', 240, 1, 1, 0, 0)
       topic_outputs.append(gptOutput)
@@ -52,9 +49,9 @@ def test_func():
 
     final_output = completePrompt('Combine these news-in-briefs (separated by ";;; ") in a text-to-speech friendly format in 360 words with appropriate transititions' + topic_outputs_str, 'api.openai.com', 720, 1, 1, 0, 0)
 
-    texttomp3(name, '<speak>' + f"Good morning ${name}! This is your yesterday, blended briefly." + final_output + '</speak>')
+    texttomp3(name, '<speak>' + f"Good morning {name}! This is your yesterday, blended briefly." + final_output + '</speak>')
     uploadtoFB(name)
-    os.remove(name + 'mp3')
+    os.remove(name + '.mp3')
 
     return doc_ref.get().to_dict()
 
@@ -124,7 +121,8 @@ def texttomp3(name, text):
   client = texttospeech_v1.TextToSpeechClient(credentials=credentials)
   synthesis_input = texttospeech_v1.SynthesisInput(ssml=text)
   voice1 = texttospeech_v1.VoiceSelectionParams (
-    language_code = 'en-in',
+    language_code = 'en-US',
+    name = 'en-US-Journey-D',
     ssml_gender = texttospeech_v1.SsmlVoiceGender.MALE)
   audio_config = texttospeech_v1.AudioConfig(
     audio_encoding = texttospeech_v1.AudioEncoding.MP3
